@@ -1,0 +1,144 @@
+"use client";
+import React, { useState, useEffect, useRef } from 'react';
+import Image from 'next/image';
+import { Play, X } from 'lucide-react';
+import { useInView, useMotionValue, useSpring } from 'framer-motion';
+import analystImage from './assets/b2b-analyst.webp';
+
+function Counter({ value, suffix = "" }) {
+    const ref = useRef(null);
+    const motionValue = useMotionValue(0);
+    const springValue = useSpring(motionValue, {
+        damping: 50,
+        stiffness: 100,
+    });
+    const isInView = useInView(ref, { once: true, margin: "-50px" });
+
+    useEffect(() => {
+        if (isInView) {
+            motionValue.set(value);
+        }
+    }, [motionValue, isInView, value]);
+
+    useEffect(() => {
+        const unsubscribe = springValue.on("change", (latest) => {
+            if (ref.current) {
+                ref.current.textContent = Math.floor(latest) + suffix;
+            }
+        });
+        return unsubscribe;
+    }, [springValue, suffix]);
+
+    return <span ref={ref}>0{suffix}</span>;
+}
+
+export default function B2BStats() {
+    const [isVideoOpen, setIsVideoOpen] = useState(false);
+
+    const stats = [
+        { label: "CTF scenarios (beginner to advanced)", value: 100, suffix: "+" },
+        { label: "Detection & investigation labs", value: 200, suffix: "+" },
+        { label: "APT-style simulations", value: 50, suffix: "+" },
+        { label: "Teams enabled / workshops delivered", value: 50, suffix: "+" },
+    ];
+
+    return (
+        <section className="relative py-24 bg-gray-50 dark:bg-[#150833] text-gray-900 dark:text-white font-sans overflow-hidden transition-colors duration-300">
+            {/* Decorative Background Elements */}
+            <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#6B46E5]/10 blur-[150px] rounded-full pointer-events-none"></div>
+
+            <div className="max-w-7xl mx-auto px-6 md:px-12 w-full">
+                <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
+
+                    {/* Left Card Area */}
+                    <div className="w-full lg:w-1/2 flex">
+                        <div className="bg-white dark:bg-[#0B0420] rounded-3xl p-8 md:p-10 border border-gray-200 dark:border-white/5 relative overflow-hidden group shadow-2xl w-full min-h-[400px] flex items-center justify-center transition-colors duration-300">
+                            {/* Card Glow */}
+                            <div className="absolute top-[-50%] left-[-50%] w-[200%] h-[200%] bg-gradient-to-br from-[#6B46E5]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"></div>
+
+                            <div className="flex flex-col items-center gap-8 relative z-10 text-center">
+                                {/* Thumbnail Image */}
+                                <div className="relative w-32 h-32 md:w-100 md:h-60 shrink-0 rounded-2xl overflow-hidden shadow-lg border border-gray-200 dark:border-white/10">
+                                    <Image
+                                        src={analystImage}
+                                        alt="Work Process"
+                                        fill
+                                        className="object-cover group-hover:scale-110 transition-transform duration-700"
+                                    />
+                                    {/* Overlay */}
+                                    <div className="absolute inset-0 bg-[#6B46E5]/20 mix-blend-overlay"></div>
+                                </div>
+
+                                {/* Content */}
+                                <div className="flex flex-col items-center gap-2">
+                                    <h3 className="text-2xl md:text-3xl font-bold leading-tight mb-4 transition-colors duration-300">
+                                        <span className="text-gray-900 dark:text-white">Our Work Process </span><br />
+                                        <span className="bg-gradient-to-r from-purple-600 via-purple-700 to-purple-900 dark:from-purple-400 dark:via-purple-500 dark:to-purple-700 bg-clip-text text-transparent">With Clients</span>
+                                    </h3>
+
+                                    <button
+                                        onClick={() => setIsVideoOpen(true)}
+                                        className="flex items-center gap-3 text-[#6B46E5] font-bold tracking-wide text-sm group/btn hover:text-[#6B46E5] dark:hover:text-white transition-colors"
+                                    >
+                                        <span className="w-10 h-10 rounded-full bg-[#6B46E5]/10 flex items-center justify-center group-hover/btn:bg-[#6B46E5] group-hover/btn:scale-110 transition-all duration-300">
+                                            <Play className="w-4 h-4 fill-current group-hover/btn:text-white" />
+                                        </span>
+                                        WATCH VIDEO
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Right Stats Grid */}
+                    <div className="w-full lg:w-1/2 flex flex-col justify-center h-full">
+                        <div className="grid grid-cols-2 gap-x-8 gap-y-16">
+                            {stats.map((stat, index) => (
+                                <div
+                                    key={index}
+                                    className="flex flex-col items-center text-center"
+                                >
+                                    <span className="text-5xl md:text-6xl font-bold text-transparent bg-clip-text bg-linear-to-b from-gray-900 to-gray-600 dark:from-white dark:to-white/60 mb-2 font-mono tracking-tighter transition-all duration-300">
+                                        <Counter value={stat.value} suffix={stat.suffix} />
+                                    </span>
+                                    <span className="text-gray-600 dark:text-gray-400 font-medium text-lg transition-colors duration-300">
+                                        {stat.label}
+                                    </span>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            {/* Video Modal */}
+            {isVideoOpen && (
+                <div
+                    className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+                    onClick={() => setIsVideoOpen(false)}
+                >
+                    <div
+                        className="relative w-full max-w-5xl aspect-video bg-black rounded-2xl overflow-hidden shadow-2xl border border-white/10"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <button
+                            className="absolute top-4 right-4 z-10 p-2 bg-black/50 text-white rounded-full hover:bg-white/20 transition-colors"
+                            onClick={() => setIsVideoOpen(false)}
+                        >
+                            <X size={24} />
+                        </button>
+                        <video
+                            src="https://res.cloudinary.com/dwpkrvrfk/video/upload/v1771334342/Cyber_Whisper_nobf1y.mp4"
+                            controls
+                            autoPlay
+                            playsInline
+                            preload="metadata"
+                            className="w-full h-full object-contain"
+                        />
+                    </div>
+                </div>
+            )}
+        </section>
+    );
+}

@@ -1,0 +1,35 @@
+import B2BHero from '../Component/B2BHero';
+import B2BMarquees from '../Component/B2BMarquees';
+// import B2BTrustMarquee from '../Component/B2BTrustMarquee';
+import B2BStats from '../Component/B2BStats';
+import B2BFeatures from '../Component/B2BFeatures';
+import B2BResilience from '../Component/B2BResilience';
+import B2BTargetAudience from '../Component/B2BTargetAudience';
+import B2BConnected from '../Component/B2BConnected';
+import B2BCaseStudy from '../Component/B2BCaseStudy';
+import B2BFAQ from '../Component/B2BFAQ';
+import B2BThemeWrapper from '../Component/B2BThemeWrapper';
+
+export const metadata = {
+    title: 'Enterprise Solutions | Cyber Whisper',
+    description: 'Advanced B2B cybersecurity infrastructure for high-performance enterprises.',
+};
+
+export default function B2BPage() {
+    return (
+        <main>
+            <B2BThemeWrapper>
+                <B2BHero />
+                <B2BMarquees />
+                {/* <B2BTrustMarquee /> */}
+                <B2BStats />
+                <B2BFeatures />
+                <B2BResilience />
+                <B2BTargetAudience />
+                <B2BConnected />
+                <B2BCaseStudy />
+                <B2BFAQ />
+            </B2BThemeWrapper>
+        </main>
+    );
+}
